@@ -1,0 +1,17 @@
+Options -Indexes
+
+RewriteEngine On
+RewriteBase /
+
+# Redirect /folder/index.php to /folder/
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*index\.php\ HTTP/
+RewriteRule ^(([^/]+/)*)index\.php$ /$1 [R=301,L]
+
+# If URL doesn't have a trailing slash and is a directory, add it
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^(.*?[^/])$ %{REQUEST_URI}/ [L,R=302]
+
+# Internal rewrite: If URL is a directory, serve index.php inside it
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME}/index.php -f
+RewriteRule ^(.*)$ $1/index.php [L]
